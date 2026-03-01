@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Generated pipeline outputs
+sample_data/l1_bronze/*.csv
+sample_data/l1_bronze/*.png
+sample_data/l2_silver/*.csv
+sample_data/l3_gold/*.csv
+sample_data/quarantine/*.csv
+
