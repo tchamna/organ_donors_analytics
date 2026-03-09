@@ -1,0 +1,41 @@
+name: Deploy Dashboard to EC2
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-ec2-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy application on EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT || 22 }}
+          script_stop: true
+          command_timeout: 30m
+          script: |
+            set -euo pipefail
+            cd /opt/organ_donors_analytics
+            git fetch origin master
+            git checkout master
+            git pull --ff-only origin master
+            python3 -m venv .venv
+            . .venv/bin/activate
+            pip install --upgrade pip
+            pip install -r requirements.txt
+            python scripts/fabric_run_pipeline.py --no-plot
+            sudo systemctl daemon-reload
+            sudo systemctl restart dashboard
+            sudo systemctl restart nginx
+            sudo systemctl status dashboard --no-pager
+            curl -I http://127.0.0.1:8050/

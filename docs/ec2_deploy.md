@@ -85,7 +85,36 @@ python scripts/fabric_run_pipeline.py --no-plot
 sudo systemctl restart dashboard
 ```
 
-## 9. Health checks / logs
+## 9. Optional GitHub Actions auto-deploy
+
+This repo can auto-deploy to EC2 on every push to `master` using:
+
+- [.github/workflows/deploy-ec2.yml](/c:/Users/tcham/Wokspace/organ_donors_analytics/.github/workflows/deploy-ec2.yml)
+
+Add these GitHub repository secrets:
+
+- `EC2_HOST`: public IP or DNS name
+- `EC2_USER`: SSH user, usually `ubuntu`
+- `EC2_SSH_KEY`: private key contents for that instance
+- `EC2_PORT`: optional, defaults to `22`
+
+The workflow:
+
+- connects to `/opt/organ_donors_analytics`
+- pulls latest `master`
+- rebuilds `.venv`
+- installs `requirements.txt`
+- reruns `python scripts/fabric_run_pipeline.py --no-plot`
+- restarts `dashboard` and `nginx`
+
+Before enabling it, make sure the EC2 host already has:
+
+- the repo cloned at `/opt/organ_donors_analytics`
+- `dashboard.service` installed
+- `nginx` configured
+- the deploy user allowed to run `sudo systemctl restart dashboard` and `sudo systemctl restart nginx`
+
+## 10. Health checks / logs
 
 ```bash
 sudo systemctl status dashboard --no-pager
