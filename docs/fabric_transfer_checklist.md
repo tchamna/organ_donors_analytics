@@ -56,6 +56,17 @@ subprocess.check_call([
 print("Pipeline completed")
 ```
 
+### Alternative: Run Repo Script Directly
+
+This repo includes `scripts/fabric_run_pipeline.py` so you can run the same pipeline with one command:
+
+```python
+import os, sys, subprocess
+project = "/lakehouse/default/Files/organ_donors_analytics"
+os.chdir(project)
+subprocess.check_call([sys.executable, "scripts/fabric_run_pipeline.py", "--install-deps", "--no-plot"])
+```
+
 ## 5. Verify Output Paths
 
 After run, validate these folders:
@@ -93,4 +104,3 @@ Reference:
 1. Run notebook/pipeline
 2. Refresh semantic model/report
 3. Present pages: Executive, Hospital, Blood/Organ Mix, Data Quality
-

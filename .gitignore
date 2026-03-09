@@ -21,4 +21,4 @@ sample_data/l1_bronze/*.png
 sample_data/l2_silver/*.csv
 sample_data/l3_gold/*.csv
 sample_data/quarantine/*.csv
-
+lightning_logs/
